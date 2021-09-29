@@ -1,48 +1,56 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using QuotesApi.Data;
 using QuotesApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-//8:08
 namespace QuotesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    
     public class QuotesController : ControllerBase
     {
-        static List<Quote> _quotes = new List<Quote>()
-       {
-           new Quote(){Id = 0, Author = "Emily Dickerson", Description= "The brain is wider than the sky,", Title="Inspriaction"},
-           new Quote(){Id = 1, Author = "Richard Bach", Description= "Love stinks", Title="Love Story"}
-       };
+        private QuotesDbContext _quotesDbContext;
 
+        public QuotesController(QuotesDbContext quotesDbContext )
+        {
+            _quotesDbContext = quotesDbContext;
+        }
+
+        // GET: api/<QuotesController>
         [HttpGet]
         public IEnumerable<Quote> Get()
         {
-            return _quotes;
+            return _quotesDbContext.Quotes;
         }
 
+        // GET api/<QuotesController>/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
+        // POST api/<QuotesController>
         [HttpPost]
-        public void Post([FromBody]Quote quote)
+        public void Post([FromBody] string value)
         {
-            _quotes.Add(quote);
         }
 
+        // PUT api/<QuotesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Quote quote)
+        public void Put(int id, [FromBody] string value)
         {
-            _quotes[id] = quote;
         }
+
+        // DELETE api/<QuotesController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            _quotes.RemoveAt(id);
         }
     }
 }
