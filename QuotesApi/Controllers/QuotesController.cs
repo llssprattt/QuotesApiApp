@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+//8:08
 namespace QuotesApi.Controllers
 {
     [Route("api/[controller]")]
@@ -16,7 +18,7 @@ namespace QuotesApi.Controllers
     {
         static List<Quote> _quotes = new List<Quote>()
        {
-           new Quote(){Id = 1, Author = "Emily Dickerson", Description= "The brain is wider than the sky,", Title="Inspriaction"},
+           new Quote(){Id = 0, Author = "Emily Dickerson", Description= "The brain is wider than the sky,", Title="Inspriaction"},
            new Quote(){Id = 1, Author = "Richard Bach", Description= "Love stinks", Title="Love Story"}
        };
 
@@ -27,9 +29,20 @@ namespace QuotesApi.Controllers
         }
 
         [HttpPost]
-        public void Post(Quote quote)
+        public void Post([FromBody]Quote quote)
         {
             _quotes.Add(quote);
+        }
+
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] Quote quote)
+        {
+            _quotes[id] = quote;
+        }
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            _quotes.RemoveAt(id);
         }
     }
 }
