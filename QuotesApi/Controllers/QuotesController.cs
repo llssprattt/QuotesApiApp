@@ -18,7 +18,7 @@ namespace QuotesApi.Controllers
     {
         private QuotesDbContext _quotesDbContext;
 
-        public QuotesController(QuotesDbContext quotesDbContext )
+        public QuotesController(QuotesDbContext quotesDbContext)
         {
             _quotesDbContext = quotesDbContext;
         }
@@ -29,7 +29,7 @@ namespace QuotesApi.Controllers
         {
 
             IQueryable<Quote> quotes;
-            switch(sort)
+            switch (sort)
             {
                 case "Desc":
                     quotes = _quotesDbContext.Quotes.OrderByDescending(q => q.CreatedAt);
@@ -43,6 +43,15 @@ namespace QuotesApi.Controllers
 
             }
             return Ok(quotes);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult PagingQuote( int? pageNumber, int? pageSize)
+        {
+            var quote = _quotesDbContext.Quotes;
+            var currentPageNumber = pageNumber ?? 1;
+            var currentPageSize = pageSize ?? 5;
+            return Ok(quote.Skip((currentPageNumber - 1) * currentPageSize).Take(currentPageSize));
         }
 
         // GET api/<QuotesController>/5
