@@ -54,6 +54,15 @@ namespace QuotesApi.Controllers
             return Ok(quote.Skip((currentPageNumber - 1) * currentPageSize).Take(currentPageSize));
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult SearchQuotes(string type)
+        {
+            var quotes = _quotesDbContext.Quotes.Where(q => q.Type.StartsWith(type));
+            return Ok(quotes);
+        }
+
+
         // GET api/<QuotesController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
