@@ -25,10 +25,24 @@ namespace QuotesApi.Controllers
 
         // GET: api/<QuotesController>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string sort)
         {
-            //return _quotesDbContext.Quotes;
-            return Ok(_quotesDbContext.Quotes);
+
+            IQueryable<Quote> quotes;
+            switch(sort)
+            {
+                case "Desc":
+                    quotes = _quotesDbContext.Quotes.OrderByDescending(q => q.CreatedAt);
+                    break;
+                case "asc":
+                    quotes = _quotesDbContext.Quotes.OrderBy(q => q.CreatedAt);
+                    break;
+                default:
+                    quotes = _quotesDbContext.Quotes;
+                    break;
+
+            }
+            return Ok(quotes);
         }
 
         // GET api/<QuotesController>/5
