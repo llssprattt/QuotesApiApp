@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,18 @@ namespace QuotesApi
             services.AddControllers();
             services.AddDbContext<QuotesDbContext>(option => option.UseSqlServer(@"Data Source=MSI;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;Initial Catalog=QuotesDb;"));
             services.AddMvc().AddXmlSerializerFormatters();
+            services.AddResponseCaching();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://dev-ttnig5o5.us.auth0.com/";
+                options.Audience = "https://localhost:44341/";
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "QuotesApi", Version = "v1" });
@@ -51,6 +64,9 @@ namespace QuotesApi
 
             app.UseHttpsRedirection();
             //quotesDbContext.Database.Migrate();
+            app.UseResponseCaching();
+            // 2. Enable authentication middleware
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseAuthorization();
