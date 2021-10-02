@@ -30,7 +30,7 @@ namespace QuotesApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<QuotesDbContext>(option => option.UseSqlServer(@"Data Source=MSI;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;Initial Catalog=QuotesDb;"));
+            services.AddDbContext<QuotesDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("QuotesDbContext")));
             services.AddMvc().AddXmlSerializerFormatters();
             services.AddResponseCaching();
 
@@ -51,7 +51,7 @@ namespace QuotesApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)//, QuotesDbContext quotesDbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuotesDbContext quotesDbContext)
         {
             if (env.IsDevelopment())
             {
@@ -63,7 +63,7 @@ namespace QuotesApi
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
-            //quotesDbContext.Database.Migrate();
+            quotesDbContext.Database.EnsureCreated();
             app.UseResponseCaching();
             // 2. Enable authentication middleware
             app.UseRouting();
