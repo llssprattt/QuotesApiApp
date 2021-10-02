@@ -26,5 +26,7 @@ namespace QuotesApi.Models
 
         [Required]
         public DateTime CreatedAt { get; set; }
+
+        public string UserId { get; set; }
     }
 }

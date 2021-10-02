@@ -29,7 +29,6 @@ namespace QuotesApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddDbContext<QuotesDbContext>(option => option.UseSqlServer(@"Data Source=MSI;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;Initial Catalog=QuotesDb;"));
             services.AddMvc().AddXmlSerializerFormatters();
@@ -63,12 +62,11 @@ namespace QuotesApi
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             //quotesDbContext.Database.Migrate();
             app.UseResponseCaching();
             // 2. Enable authentication middleware
-            app.UseAuthentication();
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -76,5 +74,6 @@ namespace QuotesApi
                 endpoints.MapControllers();
             });
         }
+
     }
 }
