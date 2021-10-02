@@ -29,7 +29,7 @@ namespace QuotesApi.Controllers
         // GET: api/<QuotesController>
         [HttpGet]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
-        //[AllowAnonymous]
+        [AllowAnonymous]
         public IActionResult Get(string sort)
         {
 
@@ -66,7 +66,14 @@ namespace QuotesApi.Controllers
             var quotes = _quotesDbContext.Quotes.Where(q => q.Type.StartsWith(type));
             return Ok(quotes);
         }
+        [HttpGet("[action]")]
+        public IActionResult MyQuote()
+        {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
+            var quotes = _quotesDbContext.Quotes.Where(q => q.UserId == userId);
+            return Ok(quotes);
+        }
 
         // GET api/<QuotesController>/5
         [HttpGet("{id}")]
